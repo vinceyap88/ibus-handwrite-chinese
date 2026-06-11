@@ -41,7 +41,10 @@ if EVDEV_AVAILABLE:
     except Exception as e:
         import traceback
 
-libz = ctypes.CDLL("libzinnia.so")
+try:
+    libz = ctypes.CDLL("libzinnia.so.0")
+except OSError:
+    libz = ctypes.CDLL("libzinnia.so")
 
 libz.zinnia_character_new.restype = ctypes.c_void_p
 libz.zinnia_character_destroy.restype = None

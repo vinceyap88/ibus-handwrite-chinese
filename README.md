@@ -18,14 +18,24 @@ A Chinese handwriting input method for Linux with a macOS-style floating panel, 
 
 ## Requirements
 
-- Debian 12 / Ubuntu 24.04 / Linux Mint 22 or similar
-- A laptop with a touchpad (or a touchscreen)
-- IBus input method framework (default on most Linux desktops)
+- Linux with a touchpad (or touchscreen)
+- IBus input method framework (default on most desktops)
+- **Debian family**: Debian 12+, Ubuntu 22.04+, Linux Mint 21+
+- **Fedora**: Fedora 39+
+- **Arch**: Arch Linux, Manjaro (zinnia from AUR)
+- **openSUSE**: Tumbleweed 15+
 
 ## Quick Install
 
 ```bash
-sudo apt install python3-evdev tegaki-zinnia-simplified-chinese
+bash <(curl -s https://raw.githubusercontent.com/vinceyap88/ibus-handwrite-chinese/main/bootstrap.sh)
+ibus restart
+```
+
+**Debian/Ubuntu/Mint** users can also use the traditional method:
+
+```bash
+sudo apt install python3-evdev tegaki-zinnia-simplified-chinese tegaki-zinnia-traditional-chinese
 git clone https://github.com/vinceyap88/ibus-handwrite-chinese
 cd ibus-handwrite-chinese
 sudo ./install.sh
@@ -92,5 +102,6 @@ Both engines can be added to your input sources simultaneously — switch betwee
 | `handwrite-chinese-simplified.svg` | Engine icon: Simplified |
 | `handwrite-chinese-traditional.svg` | Engine icon: Traditional |
 | `99-trackpad-handwrite.rules` | Udev rule for touchpad access |
-| `install.sh` | One-command install script |
+| `install.sh` | Install script (Debian-native) |
+| `bootstrap.sh` | Cross-distro install entry point |
 | `restore.sh` | Rollback/restore script |

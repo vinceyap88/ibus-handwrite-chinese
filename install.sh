@@ -1,22 +1,29 @@
 #!/bin/bash
 set -e
 
+SKIP_DEPS=false
+for arg in "$@"; do
+    [ "$arg" = "--skip-deps" ] && SKIP_DEPS=true
+done
+
 if [ "$EUID" -ne 0 ]; then
     echo "Please run as root: sudo ./install.sh"
     exit 1
 fi
 
-if ! command -v apt &>/dev/null; then
-    echo "This script requires apt (Debian/Ubuntu/Mint)"
-    exit 1
+if [ "$SKIP_DEPS" = false ]; then
+    if ! command -v apt &>/dev/null; then
+        echo "This script requires apt (Debian/Ubuntu/Mint)"
+        echo "For other distros, use bootstrap.sh (see README)"
+        exit 1
+    fi
+    echo "[1] Installing dependencies..."
+    apt update
+    DEBIAN_FRONTEND=noninteractive apt install -y python3-evdev tegaki-zinnia-simplified-chinese tegaki-zinnia-traditional-chinese
 fi
 
 echo "=== Installing Chinese Handwriting IBus Engine ==="
 echo ""
-
-echo "[1] Installing dependencies..."
-apt update
-DEBIAN_FRONTEND=noninteractive apt install -y python3-evdev tegaki-zinnia-simplified-chinese tegaki-zinnia-traditional-chinese
 
 echo "[2] Installing engine to /usr/local/bin..."
 cp ibus-engine-handwrite-chinese /usr/local/bin/
