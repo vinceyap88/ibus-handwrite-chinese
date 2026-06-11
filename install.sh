@@ -26,7 +26,7 @@ chmod 644 /usr/local/bin/handwrite_evdev.py
 
 echo "[3] Registering IBus component..."
 mkdir -p /usr/share/ibus/component
-cp handwrite-chinese.xml /usr/share/ibus/component/
+cp handwrite-chinese-simplified.xml handwrite-chinese-traditional.xml /usr/share/ibus/component/
 
 echo "[4] Installing udev rule for touchpad access..."
 cp 99-trackpad-handwrite.rules /etc/udev/rules.d/

@@ -87,7 +87,8 @@ Both engines can be added to your input sources simultaneously — switch betwee
 |------|---------|
 | `ibus-engine-handwrite-chinese` | Main engine (Python, Zinnia ctypes, GTK popup, evdev integration) |
 | `handwrite_evdev.py` | Evdev multitouch reader module |
-| `handwrite-chinese.xml` | IBus component registration |
+| `handwrite-chinese-simplified.xml` | IBus component: Simplified Chinese |
+| `handwrite-chinese-traditional.xml` | IBus component: Traditional Chinese |
 | `99-trackpad-handwrite.rules` | Udev rule for touchpad access |
 | `install.sh` | One-command install script |
 | `restore.sh` | Rollback/restore script |
