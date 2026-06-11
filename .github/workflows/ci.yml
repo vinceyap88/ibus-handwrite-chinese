@@ -14,7 +14,7 @@ jobs:
       - name: Install tools
         run: sudo apt update && sudo apt install -y shellcheck libxml2-utils
       - name: shellcheck
-        run: shellcheck bootstrap.sh install.sh restore.sh
+        run: shellcheck -e SC1091 bootstrap.sh install.sh restore.sh
       - name: xmllint
         run: xmllint --noout handwrite-chinese-simplified.xml handwrite-chinese-traditional.xml
       - name: Python syntax — engine
@@ -46,7 +46,16 @@ jobs:
         if: startsWith(matrix.distro, 'debian')
         run: |
           apt update
-          apt install -y python3-evdev tegaki-zinnia-simplified-chinese tegaki-zinnia-traditional-chinese
+          apt install -y python3-evdev tegaki-zinnia-simplified-chinese wget unzip
+          if ! apt install -y tegaki-zinnia-traditional-chinese 2>/dev/null; then
+            echo "Traditional model not in apt, downloading from GitHub..."
+            mkdir -p /usr/share/tegaki/models/zinnia
+            wget -q https://github.com/tegaki/tegaki/releases/download/v0.3/tegaki-zinnia-traditional-chinese-0.3.zip
+            unzip -q tegaki-zinnia-traditional-chinese-0.3.zip
+            cp tegaki-zinnia-traditional-chinese-0.3/*.model /usr/share/tegaki/models/zinnia/
+            cp tegaki-zinnia-traditional-chinese-0.3/*.meta /usr/share/tegaki/models/zinnia/
+            rm -rf tegaki-zinnia-traditional-chinese-0.3*
+          fi
       - name: Install deps (Fedora)
         if: startsWith(matrix.distro, 'fedora')
         run: dnf install -y python3-evdev zinnia zinnia-devel

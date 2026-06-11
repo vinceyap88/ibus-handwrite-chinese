@@ -76,11 +76,16 @@ download_model() {
 
 install_debian() {
     apt update
-    apt install -y python3-evdev tegaki-zinnia-simplified-chinese tegaki-zinnia-traditional-chinese
+    apt install -y python3-evdev tegaki-zinnia-simplified-chinese wget unzip
+    if ! apt install -y tegaki-zinnia-traditional-chinese 2>/dev/null; then
+        echo "  tegaki-zinnia-traditional-chinese not in apt (not available in this Debian release)"
+        echo "  Downloading traditional model from GitHub..."
+        download_model "zh_TW"
+    fi
 }
 
 install_fedora() {
-    dnf install -y python3-evdev zinnia zinnia-devel wget unzip
+    dnf install -y python3-evdev zinnia zinnia-devel wget unzip git
     download_model "zh_CN"
     download_model "zh_TW"
 }
