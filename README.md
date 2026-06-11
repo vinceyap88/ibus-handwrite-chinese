@@ -69,6 +69,16 @@ Or select **Chinese Handwriting** from your desktop's IBus menu.
 
 GPLv3 — required by dependencies (libzinnia, python3-evdev, ibus).
 
+## Traditional Chinese
+
+The engine also supports Traditional Chinese handwriting via a separate IBus engine. After installing, select **Chinese Handwriting (Traditional)** from your IBus menu, or switch with:
+
+```bash
+ibus engine handwrite-chinese-traditional
+```
+
+This uses the `zh_TW` Zinnia model (11853 characters). Both Simplified and Traditional engines can be added to your input sources simultaneously — switch between them like any two input methods.
+
 ## Files
 
 | File | Purpose |

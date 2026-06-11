@@ -16,7 +16,7 @@ echo ""
 
 echo "[1] Installing dependencies..."
 apt update
-DEBIAN_FRONTEND=noninteractive apt install -y python3-evdev tegaki-zinnia-simplified-chinese
+DEBIAN_FRONTEND=noninteractive apt install -y python3-evdev tegaki-zinnia-simplified-chinese tegaki-zinnia-traditional-chinese
 
 echo "[2] Installing engine to /usr/local/bin..."
 cp ibus-engine-handwrite-chinese /usr/local/bin/

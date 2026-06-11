@@ -14,6 +14,7 @@ from gi.repository import GLib, GObject, IBus, Gtk, Gdk, Gio
 
 ZINNIA_MODEL = "/usr/share/tegaki/models/zinnia/handwriting-zh_CN.model"
 MAX_CANDIDATES = 24
+_USE_FREQ = True
 
 _handwrite_dir = os.path.dirname(os.path.abspath(__file__))
 if _handwrite_dir not in sys.path:
@@ -25,6 +26,20 @@ try:
     EVDEV_AVAILABLE = True
 except ImportError:
     pass
+
+# Hack: test the import and device access immediately
+if EVDEV_AVAILABLE:
+    try:
+        import evdev
+        devs = [evdev.InputDevice(p) for p in evdev.list_devices()]
+        for d in devs:
+            if d.name == "bcm5974":
+                d.grab()
+                d.ungrab()
+                d.close()
+                break
+    except Exception as e:
+        import traceback
 
 libz = ctypes.CDLL("libzinnia.so")
 
@@ -219,7 +234,10 @@ class ZinniaHandle:
             if ch in seen:
                 continue
             seen.add(ch)
-            boost = _FREQ.get(ch, -2.0)
+            if _USE_FREQ:
+                boost = _FREQ.get(ch, -2.0)
+            else:
+                boost = 0.0
             ranked.append((ch, sc + 0.5 * boost))
         ranked.sort(key=lambda x: -x[1])
         return [(ch, sc) for ch, sc in ranked]
@@ -713,12 +731,32 @@ GObject.type_register(HandwriteEngine)
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--ibus', action='store_true')
+    parser.add_argument('--traditional', action='store_true')
+    args = parser.parse_args()
+
+    global ZINNIA_MODEL, _USE_FREQ
+    if args.traditional:
+        engine_name = "handwrite-chinese-traditional"
+        engine_longname = "Chinese Handwriting (Traditional)"
+        engine_language = "zh-TW"
+        ZINNIA_MODEL = "/usr/share/tegaki/models/zinnia/handwriting-zh_TW.model"
+        _USE_FREQ = False
+    else:
+        engine_name = "handwrite-chinese"
+        engine_longname = "Chinese Handwriting"
+        engine_language = "zh"
+        ZINNIA_MODEL = "/usr/share/tegaki/models/zinnia/handwriting-zh_CN.model"
+        _USE_FREQ = True
+
     Gtk.init(sys.argv)
     IBus.init()
 
     bus = IBus.Bus()
     factory = IBus.Factory.new(bus.get_connection())
-    factory.add_engine("handwrite-chinese", HandwriteEngine.__gtype__)
+    factory.add_engine(engine_name, HandwriteEngine.__gtype__)
 
     component = IBus.Component.new(
         "com.github.vinceyap88.ibus-handwrite-chinese",
@@ -731,10 +769,10 @@ def main():
         "ibus-engine-handwrite-chinese"
     )
     engine_desc = IBus.EngineDesc.new(
-        "handwrite-chinese",
-        "Chinese Handwriting",
+        engine_name,
+        engine_longname,
         "Chinese handwriting input using touchpad",
-        "zh",
+        engine_language,
         "GPLv3",
         "vinceyap88",
         "",
@@ -742,7 +780,7 @@ def main():
     )
     component.add_engine(engine_desc)
 
-    if "--ibus" in sys.argv:
+    if args.ibus:
         bus.request_name("com.github.vinceyap88.ibus-handwrite-chinese", 0)
     else:
         bus.register_component(component)
