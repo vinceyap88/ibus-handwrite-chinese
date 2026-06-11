@@ -89,6 +89,8 @@ Both engines can be added to your input sources simultaneously — switch betwee
 | `handwrite_evdev.py` | Evdev multitouch reader module |
 | `handwrite-chinese-simplified.xml` | IBus component: Simplified Chinese |
 | `handwrite-chinese-traditional.xml` | IBus component: Traditional Chinese |
+| `handwrite-chinese-simplified.svg` | Engine icon: Simplified |
+| `handwrite-chinese-traditional.svg` | Engine icon: Traditional |
 | `99-trackpad-handwrite.rules` | Udev rule for touchpad access |
 | `install.sh` | One-command install script |
 | `restore.sh` | Rollback/restore script |

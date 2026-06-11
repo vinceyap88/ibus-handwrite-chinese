@@ -17,6 +17,7 @@
       <license>GPLv3</license>
       <author>vinceyap88</author>
       <layout>us</layout>
+      <icon>/usr/local/share/ibus-handwrite-chinese/icons/handwrite-chinese-traditional.svg</icon>
     </engine>
   </engines>
 </component>

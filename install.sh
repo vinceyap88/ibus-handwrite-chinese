@@ -38,7 +38,11 @@ mkdir -p /usr/local/share/ibus-handwrite-chinese
 cp restore.sh /usr/local/share/ibus-handwrite-chinese/
 chmod 755 /usr/local/share/ibus-handwrite-chinese/restore.sh
 
-echo "[6] Restarting IBus..."
+echo "【6】 Installing icons..."
+mkdir -p /usr/local/share/ibus-handwrite-chinese/icons
+cp handwrite-chinese-simplified.svg handwrite-chinese-traditional.svg /usr/local/share/ibus-handwrite-chinese/icons/
+
+echo "【7】 Restarting IBus..."
 ibus restart 2>/dev/null || ibus-daemon --replace --daemonize 2>/dev/null || true
 
 echo ""
