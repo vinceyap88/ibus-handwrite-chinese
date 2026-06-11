@@ -53,8 +53,8 @@ cp handwrite-chinese-simplified.xml handwrite-chinese-traditional.xml /usr/share
 echo "[4] Installing udev rule for touchpad access..."
 mkdir -p /etc/udev/rules.d
 cp 99-trackpad-handwrite.rules /etc/udev/rules.d/
-udevadm control --reload-rules
-udevadm trigger
+udevadm control --reload-rules 2>/dev/null || true
+udevadm trigger 2>/dev/null || true
 
 echo "[5] Installing restore script..."
 mkdir -p /usr/local/share/ibus-handwrite-chinese
