@@ -424,6 +424,7 @@ class HandwriteWin(Gtk.Window):
             self.stop_trackpad()
             self._restore_cursor()
             self.darea.queue_draw()
+            self.queue_draw()
             self.show_candidates([])
             self.close_btn.show()
         else:
@@ -662,13 +663,17 @@ class HandwriteWin(Gtk.Window):
             cr.fill()
             cr.set_source_rgb(1, 1, 1)
             cr.select_font_face("Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-            cr.set_font_size(24)
+            cr.set_font_size(30)
             text = "click to resume"
             xb = cr.text_extents(text)
             box_w, box_h = xb.width + 40, xb.height + 30
             cr.rectangle((ww - box_w) / 2, (hh - box_h) / 2, box_w, box_h)
-            cr.set_source_rgba(0, 0, 0, 0.3)
+            cr.set_source_rgba(0, 0, 0, 0.6)
             cr.fill()
+            # Shadow for visibility
+            cr.set_source_rgb(0, 0, 0)
+            cr.move_to((ww - xb.width) / 2 + 2, (hh - xb.height) / 2 + 22)
+            cr.show_text(text)
             cr.set_source_rgb(1, 1, 1)
             cr.move_to((ww - xb.width) / 2, (hh - xb.height) / 2 + 20)
             cr.show_text(text)
