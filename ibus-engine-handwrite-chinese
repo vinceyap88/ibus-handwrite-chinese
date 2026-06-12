@@ -341,6 +341,7 @@ class HandwriteWin(Gtk.Window):
         self.close_btn.get_style_context().add_class("close-btn")
         self.close_btn.set_can_focus(False)
         self.close_btn.connect("clicked", self.on_close_click)
+        self.close_btn.hide()
         self.cand_bar.pack_start(self.close_btn, False, False, 0)
 
         self.cand_inner = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=1)
@@ -424,6 +425,7 @@ class HandwriteWin(Gtk.Window):
             self.stop_trackpad()
             self._restore_cursor()
             self.queue_draw()
+            self.close_btn.show()
         else:
             self._do_reset()
             self._do_disable()
@@ -451,6 +453,7 @@ class HandwriteWin(Gtk.Window):
         if self._state == 1:
             self._state = 0
             self.queue_draw()
+            self.close_btn.hide()
             self.start_trackpad()
             self._hide_cursor()
         return False
