@@ -310,6 +310,19 @@ class HandwriteWin(Gtk.Window):
             .delete-btn:hover {
                 color: white;
             }
+            .close-btn {
+                background: transparent;
+                color: #999;
+                font-size: 18px;
+                font-weight: bold;
+                border: none;
+                padding: 2px 8px;
+                min-width: 28px;
+                min-height: 28px;
+            }
+            .close-btn:hover {
+                color: white;
+            }
         """)
         screen = Gdk.Screen.get_default()
         Gtk.StyleContext.add_provider_for_screen(
@@ -324,6 +337,12 @@ class HandwriteWin(Gtk.Window):
         self.cand_bar.set_margin_bottom(2)
         self.cand_bar.set_margin_start(6)
         self.cand_bar.set_margin_end(4)
+        self.close_btn = Gtk.Button(label="×")
+        self.close_btn.get_style_context().add_class("close-btn")
+        self.close_btn.set_can_focus(False)
+        self.close_btn.connect("clicked", self.on_close_click)
+        self.cand_bar.pack_start(self.close_btn, False, False, 0)
+
         self.cand_inner = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=1)
         self.cand_bar.pack_start(self.cand_inner, True, True, 0)
 
@@ -409,6 +428,11 @@ class HandwriteWin(Gtk.Window):
             self._do_reset()
             self._do_disable()
             self.engine.restore_previous_engine()
+
+    def on_close_click(self, btn=None):
+        self._do_reset()
+        self._do_disable()
+        self.engine.restore_previous_engine()
 
     def on_key(self, w, ev):
         name = Gdk.keyval_name(ev.get_keyval()[1])

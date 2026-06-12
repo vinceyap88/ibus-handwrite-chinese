@@ -26,7 +26,10 @@ After `self._do_disable()`, calls `self.engine.restore_previous_engine()`.
 ### Change 6: Window type POPUP → TOPLEVEL + UTILITY hint
 `Gtk.WindowType.POPUP` causes GTK to automatically perform a pointer grab, blocking mouse clicks on all other windows while the handwriting panel is visible. Changed to `Gtk.WindowType.TOPLEVEL` with `set_type_hint(Gdk.WindowTypeHint.UTILITY)` — no input grab, no decorations, no taskbar entry.
 
-### Change 7: `_state` reset in `_do_disable` and `do_enable`
+### Change 7: Close button at top-left
+Added `×` button to candidate bar top-left. Clicking it directly calls `_do_reset()`, `_do_disable()`, and `restore_previous_engine()` — same close behavior as second Esc press.
+
+### Change 8: `_state` reset in `_do_disable` and `do_enable`
 `_state` wasn't reset after `_do_disable()`, causing the first Esc after re-activation to close instead of pause. Fixed by adding `self._state = 0` in `_do_disable()` and `self.win._state = 0` in `do_enable()`.
 
 ## Verification
