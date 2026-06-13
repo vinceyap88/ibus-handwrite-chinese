@@ -779,13 +779,33 @@ class HandwriteEngine(IBus.Engine):
         if not self.win:
             return
         screen = Gdk.Screen.get_default()
-        mw = screen.get_width()
-        mh = screen.get_height()
+        display = screen.get_display()
         win_w = 400
         win_h = 360
-        wx = mw - win_w - 12
-        wy = mh - win_h - 12
-        self.win.move(int(wx), int(wy))
+        our_gdk_win = self.win.get_window()
+        active = screen.get_active_window()
+        if active is None or active == our_gdk_win:
+            mon = display.get_primary_monitor()
+            wa = mon.get_workarea()
+            wx = wa.x + wa.width - win_w - 12
+            wy = wa.y + wa.height - win_h - 12
+            self.win.move(int(wx), int(wy))
+            return
+        rect = active.get_frame_extents()
+        mon = display.get_monitor_at_window(active)
+        wa = mon.get_workarea()
+        candidates = [
+            (rect.x + rect.width + 10, rect.y),
+            (rect.x, rect.y + rect.height + 10),
+            (rect.x - win_w - 10, rect.y),
+            (rect.x, rect.y - win_h - 10),
+            (wa.x + wa.width - win_w - 12, wa.y + wa.height - win_h - 12),
+        ]
+        for wx, wy in candidates:
+            if (wa.x <= wx <= wa.x + wa.width - win_w and
+                wa.y <= wy <= wa.y + wa.height - win_h):
+                self.win.move(int(wx), int(wy))
+                return
 
     def do_enable(self):
         self._write_log('do_enable')
