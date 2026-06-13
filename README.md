@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/vinceyap88/ibus-handwrite-chinese/actions/workflows/ci.yml/badge.svg)](https://github.com/vinceyap88/ibus-handwrite-chinese/actions/workflows/ci.yml)
 
+**English** · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md)
+
 A Chinese handwriting input method for Linux with a macOS-style floating panel, evdev touchpad integration, and Zinnia-based recognition.
 
 ![screenshot](screenshot.png)
