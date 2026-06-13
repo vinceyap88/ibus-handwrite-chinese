@@ -137,10 +137,10 @@ else
     cd "$tmpdir"
     LILY_URL="https://gitee.com/LZQingXi/handwriting-zh_CN_Community/releases/download/1.1.0/handwriting-zh_CN-%E7%A4%BE%E5%8C%BA%E7%89%88_V1.1.0.7z"
     LILY_MIRROR="https://github.com/vinceyap88/ibus-handwrite-chinese/releases/download/v0.1.0/handwriting-zh_CN-community.7z"
-    echo "  Downloading from GitHub mirror..."
-    if ! wget -q --max-redirect=5 -O model.7z "$LILY_MIRROR"; then
-        echo "  GitHub mirror failed, trying Gitee..."
-        wget -q --max-redirect=5 -O model.7z "$LILY_URL"
+    echo "  Downloading from Gitee..."
+    if ! wget -q --max-redirect=5 -O model.7z "$LILY_URL"; then
+        echo "  Gitee failed, trying GitHub mirror..."
+        wget -q --max-redirect=5 -O model.7z "$LILY_MIRROR"
     fi
     echo "  Extracting..."
     7z x -y model.7z >/dev/null 2>&1
