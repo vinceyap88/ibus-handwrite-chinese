@@ -35,24 +35,52 @@ jobs:
           pacman-key --init
           pacman-key --populate archlinux
           pacman -Syu --noconfirm
-          pacman -S --noconfirm base-devel git sudo
+          pacman -S --noconfirm base-devel git sudo wget
           useradd -m builder
           echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
           su builder -c "cd /tmp && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si --noconfirm"
+          su builder -c "yay -S --noconfirm zinnia"
       - name: Install deps (Debian/Ubuntu)
         if: startsWith(matrix.distro, 'debian') || startsWith(matrix.distro, 'ubuntu')
         run: |
           apt update
-          apt install -y python3-evdev tegaki-zinnia-simplified-chinese wget unzip
+          apt install -y python3-evdev libzinnia0 wget unzip
+          mkdir -p /usr/share/tegaki/models/zinnia
+          wget -q https://github.com/tegaki/tegaki/releases/download/v0.3/tegaki-zinnia-simplified-chinese-0.3.zip
+          unzip -q tegaki-zinnia-simplified-chinese-0.3.zip
+          cp tegaki-zinnia-simplified-chinese-0.3/*.model /usr/share/tegaki/models/zinnia/
+          cp tegaki-zinnia-simplified-chinese-0.3/*.meta /usr/share/tegaki/models/zinnia/
+          rm -rf tegaki-zinnia-simplified-chinese-0.3*
       - name: Install deps (Fedora)
         if: startsWith(matrix.distro, 'fedora')
-        run: dnf install -y python3-evdev zinnia zinnia-devel wget unzip
+        run: |
+          dnf install -y python3-evdev zinnia zinnia-devel wget unzip
+          mkdir -p /usr/share/tegaki/models/zinnia
+          wget -q https://github.com/tegaki/tegaki/releases/download/v0.3/tegaki-zinnia-simplified-chinese-0.3.zip
+          unzip -q tegaki-zinnia-simplified-chinese-0.3.zip
+          cp tegaki-zinnia-simplified-chinese-0.3/*.model /usr/share/tegaki/models/zinnia/
+          cp tegaki-zinnia-simplified-chinese-0.3/*.meta /usr/share/tegaki/models/zinnia/
+          rm -rf tegaki-zinnia-simplified-chinese-0.3*
       - name: Install deps (Arch)
         if: startsWith(matrix.distro, 'arch')
-        run: su builder -c "yay -S --noconfirm zinnia"
+        run: |
+          su builder -c "yay -S --noconfirm zinnia"
+          mkdir -p /usr/share/tegaki/models/zinnia
+          wget -q https://github.com/tegaki/tegaki/releases/download/v0.3/tegaki-zinnia-simplified-chinese-0.3.zip
+          unzip -q tegaki-zinnia-simplified-chinese-0.3.zip
+          cp tegaki-zinnia-simplified-chinese-0.3/*.model /usr/share/tegaki/models/zinnia/
+          cp tegaki-zinnia-simplified-chinese-0.3/*.meta /usr/share/tegaki/models/zinnia/
+          rm -rf tegaki-zinnia-simplified-chinese-0.3*
       - name: Install deps (openSUSE)
         if: startsWith(matrix.distro, 'opensuse')
-        run: zypper install -y python3-evdev zinnia zinnia-devel wget unzip
+        run: |
+          zypper install -y python3-evdev zinnia zinnia-devel wget unzip
+          mkdir -p /usr/share/tegaki/models/zinnia
+          wget -q https://github.com/tegaki/tegaki/releases/download/v0.3/tegaki-zinnia-simplified-chinese-0.3.zip
+          unzip -q tegaki-zinnia-simplified-chinese-0.3.zip
+          cp tegaki-zinnia-simplified-chinese-0.3/*.model /usr/share/tegaki/models/zinnia/
+          cp tegaki-zinnia-simplified-chinese-0.3/*.meta /usr/share/tegaki/models/zinnia/
+          rm -rf tegaki-zinnia-simplified-chinese-0.3*
       - name: Install engine files
         run: |
           mkdir -p /usr/local/bin /usr/share/ibus/component /etc/udev/rules.d /usr/local/share/ibus-handwrite-chinese
@@ -66,8 +94,6 @@ jobs:
           chmod 755 /usr/local/share/ibus-handwrite-chinese/restore.sh
       - name: Verify libzinnia loads
         run: |
-          ldconfig -p 2>/dev/null | grep zinnia || echo "zinnia not in ldconfig cache"
-          find /usr/lib /usr/local/lib -name 'libzinnia*' 2>/dev/null || echo "no libzinnia found"
           python3 -c "
           import ctypes, sys;
           for lib in ['libzinnia.so.0', 'libzinnia.so']:
