@@ -135,14 +135,14 @@ else
     tmpdir="$(mktemp -d)"
     prev_dir="$(pwd)"
     cd "$tmpdir"
-    CACHE_FILE="$prev_dir/models/handwriting-zh_CN-community.7z"
-    if [ -f "$CACHE_FILE" ]; then
-        echo "  Using local cache: models/handwriting-zh_CN-community.7z"
-        cp "$CACHE_FILE" model.7z
-    else
-        LILY_URL="https://gitee.com/LZQingXi/handwriting-zh_CN_Community/releases/download/1.1.0/handwriting-zh_CN-%E7%A4%BE%E5%8C%BA%E7%89%88_V1.1.0.7z"
-        echo "  Downloading from Gitee..."
-        if ! wget -q --max-redirect=5 -O model.7z "$LILY_URL"; then
+    LILY_URL="https://gitee.com/LZQingXi/handwriting-zh_CN_Community/releases/download/1.1.0/handwriting-zh_CN-%E7%A4%BE%E5%8C%BA%E7%89%88_V1.1.0.7z"
+    echo "  Downloading from Gitee..."
+    if ! wget -q --max-redirect=5 -O model.7z "$LILY_URL"; then
+        CACHE_FILE="$prev_dir/models/handwriting-zh_CN-community.7z"
+        if [ -f "$CACHE_FILE" ]; then
+            echo "  Gitee failed, using local cache: models/handwriting-zh_CN-community.7z"
+            cp "$CACHE_FILE" model.7z
+        else
             echo "  ✗ Failed to download 幽兰百合 model from Gitee."
             echo "    Manual download: https://gitee.com/LZQingXi/handwriting-zh_CN_Community"
             echo "    Place ZJHandWriting-zh_CN.model in /usr/local/share/ibus-handwrite-chinese/models/"
